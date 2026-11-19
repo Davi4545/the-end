@@ -1,43 +1,27 @@
-# Roadmap — The End
+# Roadmap Venqra
 
-## Etapa 0 — protótipo de validação (entregue)
-- [x] Identidade visual e navegação por módulos
-- [x] Dashboard com dados calculados
-- [x] Produtos, clientes e inventário local
-- [x] Venda demonstrativa e regras de estoque
-- [x] Cashback básico e metas da unidade
-- [x] Testes de funções críticas
-- [x] Exportação/importação de backup JSON
+## Implementado na fundação v0.2
+- [x] API local e banco SQLite persistente
+- [x] Autenticação, sessão e papéis básicos
+- [x] Organizações e filiais
+- [x] Produtos e clientes
+- [x] Estoque, movimentações e vendas demonstrativas
+- [x] Cashback como ledger demonstrativo
+- [x] Metas por filial e trilha de auditoria
 
-## Etapa 1 — MVP real e infraestrutura
-- [ ] Backend TypeScript, API e PostgreSQL com migrações
-- [ ] Cadastro de organizações/unidades e isolamento entre empresas
-- [ ] Autenticação, RBAC e trilha de auditoria
-- [ ] Regras de saldo e carrinho com operações transacionais e idempotentes
-- [ ] CRUD e consultas paginadas, filtros, importação de catálogo
-- [ ] Testes e pipeline CI/CD, backups e observabilidade
+## Próximos blocos de desenvolvimento
+- [ ] Migrar para PostgreSQL e preparar migrações versionadas
+- [ ] Controle fino de permissões, vínculo de vendedor a lojas e segurança de produção
+- [ ] Histórico detalhado e edição segura de produtos e clientes
+- [ ] Gestão de pedidos, orçamentos, devoluções e reserva de estoque
+- [ ] Integração real de pagamentos, webhooks assinados, conciliação e estornos
+- [ ] Política versionada de cashback, validade, bloqueios e antifraude
+- [ ] CRM: tarefas, funil, campanhas e consentimento LGPD
+- [ ] Metas por vendedor/equipe, comissões e regras de cálculo
+- [ ] Financeiro: contas, caixa e fechamento
+- [ ] Adapters para e-commerce, mensageria e integrador fiscal
+- [ ] Fluxos NF-e/NFC-e com configuração e homologação tributária por cenário
+- [ ] Observabilidade, backup, restauração, deploy seguro
 
-## Etapa 2 — PDV comercial
-- [ ] Sessão de caixa, abertura, sangria e fechamento
-- [ ] Pagamento via integrador, conciliação e estorno
-- [ ] Orçamento, pedidos, trocas e devoluções
-- [ ] Tabelas de preço, desconto sob aprovação e promoções
-- [ ] Emissão fiscal integrada e homologada conforme operação-alvo
-
-## Etapa 3 — fidelização e inteligência
-- [ ] CRM 360° com histórico, segmentos e consentimentos
-- [ ] Cashback por regra/campanha, expiração e estorno
-- [ ] Metas por vendedor, equipe, loja e período
-- [ ] Comissões auditáveis e dashboards por perfil
-- [ ] Alertas inteligentes de ruptura, margem e clientes inativos
-
-## Etapa 4 — omnichannel e escala
-- [ ] Integrações com e-commerce, marketplaces e mensageria
-- [ ] Reserva de estoque e retirada em loja
-- [ ] Transferências entre unidades e compras de fornecedor
-- [ ] Consolidação multiempresa/multifilial
-- [ ] Segurança, performance, offline controlado e expansão gradual
-
-## Critérios para produção
-
-Sem ambiente produtivo antes de: autenticação e isolamento entre empresas; testes de segurança; backups e restauração; integrações homologadas; política de privacidade e auditoria; requisitos fiscais aplicáveis; recuperação de falhas e conciliação de saldos.
+## Testes e homologação
+A campanha completa de testes ocorrerá após completar os módulos; entretanto, verificações de integridade, autenticação e transações devem permanecer contínuas para evitar regressões graves.

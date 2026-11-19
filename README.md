@@ -1,79 +1,71 @@
-# THE END — Commerce OS
+# Venqra — Release Candidate v1.0 (DESENVOLVIMENTO)
 
-Plataforma de gestão comercial para operações de varejo. Esta entrega é um **protótipo funcional local**: vendas simuladas, catálogo, estoque, clientes/CRM, cashback, acompanhamento de meta e painel fiscal informativo.
+**Status:** versão candidata para demonstração e avaliação local. **Não é um ERP 100% homologado nem deve ser colocado em produção ou usado para registrar vendas reais.**
 
-## O que já funciona
+A interface premium é um painel web conectado a um backend Python (biblioteca padrão) e banco SQLite. Nenhum framework ou pacote precisa ser instalado com `pip`.
 
-- Dashboard com indicadores calculados a partir de vendas realmente cadastradas no protótipo.
-- Cadastro/edição de produtos, preços, custos, SKUs únicos, limite mínimo de estoque.
-- Cadastro/edição de clientes com observações, telefone, e-mail e histórico de vendas.
-- PDV demonstrativo com múltiplos itens, quantidades, desconto, forma de pagamento informada e associação de cliente.
-- Validação de saldo disponível no estoque antes da venda.
-- Baixa automática do estoque e lançamento em histórico de movimentações.
-- Geração/resgate de cashback para cliente identificado, com extrato de créditos e débitos.
-- Inventário com ajustes positivos/negativos justificados e bloqueio de estoque negativo.
-- Configuração de meta global e taxa de cashback.
-- Exportação/importação do backup JSON no navegador.
-- Testes automatizados das regras centrais, sem dependências externas.
+## Começar no Windows, sem digitar comandos
 
-## Como executar
+1. Instale Python 3.10+ com a opção **Add Python to PATH** (caso ainda não esteja instalado).
+2. Extraia todo o ZIP em uma pasta.
+3. Abra `CONFIGURAR-PRIMEIRO-ACESSO.bat`, informe dados da empresa, administrador e senha com no mínimo 12 caracteres.
+4. Abra `INICIAR-WINDOWS.bat`. **Deixe a janela aberta** enquanto utiliza o aplicativo.
+5. Abra **http://127.0.0.1:3000** no navegador e entre com o usuário criado.
+6. Para fazer cópia íntegra do banco, use `FAZER-BACKUP-WINDOWS.bat`.
 
-Requisitos: Python 3 (ou qualquer servidor HTTP estático). Não precisa instalar frameworks nem banco de dados.
+Para migrar dados de uma v0.4 existente, feche ambos os servidores, faça cópia de segurança e transfira o arquivo `the_end.db` para a raiz desta versão. O banco recebe automaticamente as tabelas novas ao iniciar. **Não sobrescreva bancos sem manter cópia.**
 
-```bash
-cd the-end
-python -m http.server 3000
-```
+## Módulos incluídos
 
-Abra **http://localhost:3000** no navegador. Use Chrome, Edge ou Firefox. **Não abra `index.html` diretamente pelo Explorador:** módulos JavaScript costumam exigir origem HTTP.
+| Área | Entrega verificável | Limite atual |
+|---|---|---|
+| Login | Senha com PBKDF2, sessão expirada em 12h, perfis | Sem autenticação multifator/rate limiting |
+| Organizações | Estrutura de organização/unidade e escopo na API | Sem SaaS de provisionamento automático |
+| Vendas | Carrinho, preços recalculados no servidor, baixa de estoque, chave de idempotência | Pagamento apenas informado, não confirmado |
+| Orçamentos | Orçamento com itens e valores persistidos | Não converte automaticamente em venda |
+| Produtos | Código SKU, preço e custo | Sem variantes, lotes, fotos ou código de barras dedicado |
+| Inventário | Saldos por loja, ajuste, movimentações e transferência transacional | Sem coleta com leitor nem integração logística |
+| CRM | Cadastro, tarefas, oportunidades e histórico vinculado às vendas | Sem disparo de WhatsApp, e-mail ou consentimento gerenciado |
+| Cashback | Acúmulo, resgate, extrato, política ajustável por empresa | Promocional demonstrativo; sem expiração e controles antifraude completos |
+| Devoluções | Devolução parcial limitada à quantidade vendida, reentrada em estoque | Reembolso financeiro e documento fiscal NÃO realizados |
+| Financeiro | Contas a pagar/receber, vencimentos e baixa manual | Sem bancos, conciliação ou cobrança real |
+| Metas | Metas mensais por filial | Sem comissões ou metas por vendedor |
+| Inteligência | Alertas de baixo estoque, inatividade, saldo financeiro aberto | Heurísticas básicas, não é previsão por IA |
+| Relatórios | Vendas diárias, produtos e contas | Não calcula tributos nem confirma lucro realizado |
+| Fiscal | Bloqueio explícito de emissão | Sem NF-e/NFC-e, certificado, Sefaz ou homologação |
+| Auditoria | Registro de operações principais | Revisão de abrangência ainda necessária |
+| Backups | Cópia consistente SQLite com `integrity_check` | Sem criptografia e política de retenção automáticas |
 
-Alternativamente, quem já usa Node.js pode executar `npx serve -l 3000 .`.
+## Segurança e isolamento
 
-### Testes
+- Servidor vinculado a **127.0.0.1**, sem exposição pública.
+- APIs requerem token e estabelecem o escopo pelo usuário autenticado.
+- Operações de movimentação/venda são executadas em transação SQLite.
+- Valores monetários são armazenados em centavos inteiros.
+- O navegador exibe alertas persistentes de ambiente de desenvolvimento.
+- O cashback registra crédito demonstrativo mesmo que o pagamento não tenha sido confirmado. Não tratar como saldo resgatável real.
+- Não armazenar dados financeiros reais, cartões, CPF ou outras informações pessoais sensíveis nesta versão.
 
-Requer Node.js 20 ou superior:
-
-```bash
-npm test
-```
-
-## Pastas
-
-```text
-the-end/
-├── index.html
-├── assets/
-│   ├── app.js       # Interface e fluxos do protótipo
-│   ├── domain.js    # Regras de negócio, em centavos e testáveis
-│   ├── data.js      # Persistência local e dados de exemplo
-│   └── styles.css   # Identidade visual responsiva
-├── docs/
-│   ├── ARCHITECTURE.md
-│   └── ROADMAP.md
-├── tests/
-│   └── domain.test.js
-└── package.json
-```
-
-## Avisos importantes
-
-**Este projeto não está pronto para uso comercial nem produção.** Seu armazenamento é `localStorage`, localizado no navegador e dispositivo onde for usado. Não há login, permissões, servidor transacional, persistência centralizada, conciliação bancária, captura de pagamentos ou emissão fiscal. Dados podem ser apagados pelo navegador. Não utilize dados pessoais reais, informações financeiras sensíveis ou operações comerciais efetivas.
-
-As modalidades de pagamento são rótulos informativos e não movimentam dinheiro. O módulo fiscal mostra “não emitido” e não gera NF-e/NFC-e. Lucro bruto é apenas uma estimativa contábil simplificada.
-
-Para evoluir até produção, seguir o [ROADMAP](docs/ROADMAP.md) e a [ARCHITECTURE](docs/ARCHITECTURE.md).
-
-## Publicação no GitHub
-
-O repositório previsto é `https://github.com/Davi4545/the-end`. Quando tiver permissões de escrita (ou via terminal autenticado), publique:
+## Executar testes
 
 ```bash
-git init
-git branch -M main
-git add .
-git commit -m "feat: initial The End functional prototype"
-git remote add origin https://github.com/Davi4545/the-end.git
-git push -u origin main
+python -m unittest discover -s tests -v
+node --check web/app.js
 ```
 
-Se já houver arquivos no repositório remoto, primeiro sincronize o histórico antes de enviar. Não sobrescreva alterações existentes.
+## Limitações para lançamento comercial
+
+Antes de poder chamar o Venqra de **v1.0 homologada** é indispensável realizar: integração com provedor de pagamentos e webhooks idempotentes, integração fiscal NF-e/NFC-e conforme UF/regime, fluxo de devoluções e estornos fiscais/financeiros, permissões granulares, controles antifraude e de fidelização, LGPD (retenção/consentimentos/solicitações dos titulares), implantação com HTTPS, proteção de login, monitoramento, backup criptografado com restauração verificada, migração para infraestrutura apropriada, testes de ponta a ponta e piloto supervisionado com empresas.
+
+**Esta entrega é `v1.0-rc`, não `v1.0` aprovada para produção.**
+
+Destino do código: https://github.com/Davi4545/the-end. A integração do GitHub disponível anteriormente negou autorização para alterações. Este pacote é uma cópia local e não significa que foi publicado.
+
+## Identidade e compatibilidade
+
+- Nova identidade Venqra, com paleta preta/roxa, logotipo vetorial e favicon.
+- A URL local, as rotas e os fluxos do backend permanecem iguais à versão anterior.
+- Para não quebrar bancos existentes, o arquivo continua denominado `the_end.db` e a variável de ambiente `THE_END_DB` continua aceita. São nomes internos legados, **não** o nome público do produto.
+- O token anterior `the_end_token` é lido apenas para continuidade da sessão e removido após login; novas sessões usam `venqra_token`.
+- A marca Venqra ainda precisa de verificação jurídica de disponibilidade para uso comercial.
+- O arquivo `PREVIA-VENQRA.html` é uma amostra estática de identidade, independente do servidor e sem dados reais.
